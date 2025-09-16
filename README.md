@@ -40,9 +40,9 @@ Use the trained model to predict  for a new input value .
 
 ## PROGRAM
 
-### Name: SANJAY C
+### Name: SANJAI S
 
-### Register Number: 212223240150
+### Register Number: 212223230185
 
 ```python
 import torch
@@ -154,8 +154,6 @@ plt.show()
 # Final Weights & Bias
 final_weight = model.linear.weight.item()
 final_bias = model.linear.bias.item()
-print("\nName: Sanjay C")
-print("Register No: 212223240150")
 print(f'\nFinal Weight: {final_weight:.8f}, Final Bias: {final_bias:.8f}')
 ```
 
@@ -185,8 +183,7 @@ plt.show()
 # Prediction for x = 120
 x_new = torch.tensor([[120.0]])  # New input as a tensor
 y_new_pred = model(x_new).item()  # Predict using trained model
-print("\nName: Sanjay C")
-print("Register No: 212223240150")
+
 print(f"\nPrediction for x = 120: {y_new_pred:.8f}")
 ```
 <img width="369" height="103" alt="image" src="https://github.com/user-attachments/assets/2add298a-afbd-4ca9-8395-defd755b09a5" />
