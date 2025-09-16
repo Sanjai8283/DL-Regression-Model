@@ -40,154 +40,105 @@ Use the trained model to predict  for a new input value .
 
 ## PROGRAM
 
-### Name: SANJAI S
+### Name:SANJAI S
 
-### Register Number: 212223230185
+### Register Number:212223230185
 
-```python
+```
 import torch
-import torch.nn as nn  # Neural network module
-import matplotlib.pyplot as plt  # For plotting
-```
-```PY
-#  Generate Input Data (X) and Output Data (y)
-torch.manual_seed(71)  # For reproducibility
-x=torch.linspace(1,50,50).reshape(-1,1)
-e=torch.randint(-8,9,(50,1),dtype=torch.float)
-y=2*X+1+e
-```
-```PY
-# Plot the original data
-plt.scatter(X, y, color='red')
+import torch.nn as nn
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+X = torch.linspace(1,70,70).reshape(-1,1)
+torch.manual_seed(71)
+e = torch.randint(-8,9,(70,1),dtype=torch.float)
+y = 2*X + 1 + e
+print(y.shape)
+plt.scatter(X.numpy(), y.numpy(),color='red')  # Scatter plot of data points
 plt.xlabel('x')
 plt.ylabel('y')
 plt.title('Generated Data for Linear Regression')
 plt.show()
-```
-<img width="718" height="573" alt="image" src="https://github.com/user-attachments/assets/9c1066cd-0017-4239-8f5c-02722a23dbdb" />
-
-```PY
-# Define the Linear Model Class
 class Model(nn.Module):
     def __init__(self, in_features, out_features):
         super().__init__()
-        self.linear=nn.Linear(in_features,out_features)
-
+        self.linear = nn.Linear(in_features, out_features)
+        
     def forward(self, x):
-        return self.linear(x)
-```
-
-```PY
-plt.scatter(x.numpy(),y.numpy())
-```
-<img width="691" height="547" alt="image" src="https://github.com/user-attachments/assets/886a0694-fe6a-4279-b093-f3c9dd459174" />
-
-
-```PY
-class Model(nn.Module):
-    
-    def __init__(self,in_features,out_features):
-        super().__init__()
-        
-        self.linear = nn.Linear(in_features,out_features)
-        
-    def forward(self,x):
         y_pred = self.linear(x)
         return y_pred
-```
-```PY
-# Initialize the Model
-torch.manual_seed(59)  # Ensure same initial weights
-model = Model(1, 1)
-```
-```PY
-# Print Initial Weights and Bias
-initial_weight = model.linear.weight.item()
-initial_bias = model.linear.bias.item()
-print("\nName: Sanjay C")
-print("Register No: 212223240150")
-print(f'Initial Weight: {initial_weight:.8f}, Initial Bias: {initial_bias:.8f}\n')
-```
-<img width="504" height="98" alt="image" src="https://github.com/user-attachments/assets/a32caedc-a7b0-4289-b168-3e2e212ad859" />
+torch.manual_seed(59)
+model = nn.Linear(1, 1)
+print('Weight:', model.weight.item())
+print('Bias:  ', model.bias.item())
+loss_function = nn.MSELoss()
 
-
-```PY
-# Define Loss Function & Optimizer
-loss_function=nn.MSELoss()
-optimizer=torch.optim.SGD(model.parameters(),lr=0.001)
-```
-
-```PY
-# Train the Model
-epochs = 100
+optimizer = torch.optim.SGD(model.parameters(), lr=0.0001)
+epochs = 50
 losses = []
 
-for epoch in range(1, epochs + 1):  # Loop over epochs
+for epoch in range(1, epochs + 1):
     optimizer.zero_grad()
-    y_pred=model(X)
-    loss=loss_function(y_pred,y)
+    y_pred = model(X)
+    loss = loss_function(y_pred, y)
     losses.append(loss.item())
+
     loss.backward()
     optimizer.step()
 
-    # Print loss, weight, and bias for EVERY epoch
+
     print(f'epoch: {epoch:2}  loss: {loss.item():10.8f}  '
-          f'weight: {model.linear.weight.item():10.8f}  '
-          f'bias: {model.linear.bias.item():10.8f}')
-```
-
-<img width="621" height="640" alt="image" src="https://github.com/user-attachments/assets/63df3ec3-621e-4148-a009-ce930703d3d7" />
-
-
-```PY
-# Plot Loss Curve
-plt.plot(range(epochs), losses, color='blue')
+          f'weight: {model.weight.item():10.8f}  '
+          f'bias: {model.bias.item():10.8f}')
+plt.plot(range(epochs), losses)
 plt.ylabel('Loss')
-plt.xlabel('Epoch')
-plt.title('Loss Curve')
+plt.xlabel('epoch');
 plt.show()
-```
-<img width="725" height="567" alt="image" src="https://github.com/user-attachments/assets/8eb5b397-a703-4d38-90a0-2a1c0715e982" />
+
+x1 = torch.tensor([X.min().item(), X.max().item()])
 
 
-```PY
-# Final Weights & Bias
-final_weight = model.linear.weight.item()
-final_bias = model.linear.bias.item()
-print(f'\nFinal Weight: {final_weight:.8f}, Final Bias: {final_bias:.8f}')
-```
+w1, b1 = model.weight.item(), model.bias.item()
 
-<img width="440" height="102" alt="image" src="https://github.com/user-attachments/assets/c41519c5-1c63-4424-86f2-5068d275219d" />
 
-```PY
-#  Best-Fit Line Calculation
-x1 = torch.tensor([X.min().item(), X.max().item()]) # Find min and max values of X
-y1 = x1 * final_weight + final_bias # Compute corresponding y-values using trained model
-```
+y1 = x1 * w1 + b1
 
-```PY
-# Plot Original Data & Best-Fit Line
-plt.scatter(X, y, label="Original Data")
-plt.plot(x1, y1, 'r', label="Best-Fit Line")
+print(f'Final Weight: {w1:.8f}, Final Bias: {b1:.8f}')
+print(f'X range: {x1.numpy()}')
+print(f'Predicted Y values: {y1.numpy()}')
+
+plt.scatter(X.numpy(), y.numpy(), label="Original Data")
+plt.plot(x1.numpy(), y1.numpy(), 'r', label="Best-Fit Line")
 plt.xlabel('x')
 plt.ylabel('y')
 plt.title('Trained Model: Best-Fit Line')
 plt.legend()
 plt.show()
 ```
+### Dataset Information
+<img width="798" height="572" alt="image" src="https://github.com/user-attachments/assets/e41266f9-3b87-41f8-8be2-63af30fdaa12" />
 
-<img width="710" height="570" alt="image" src="https://github.com/user-attachments/assets/90465302-fbde-4c41-90f8-2302c6ef9c3d" />
+
+### OUTPUT
+Training Loss Vs Iteration Plot
 
 
-```PY
-# Prediction for x = 120
-x_new = torch.tensor([[120.0]])  # New input as a tensor
-y_new_pred = model(x_new).item()  # Predict using trained model
+<img width="710" height="743" alt="image" src="https://github.com/user-attachments/assets/aca936ec-0a46-4803-bf73-41f8db996d1e" />
 
-print(f"\nPrediction for x = 120: {y_new_pred:.8f}")
-```
-<img width="369" height="103" alt="image" src="https://github.com/user-attachments/assets/2add298a-afbd-4ca9-8395-defd755b09a5" />
+Best Fit line plot
 
+
+<img width="693" height="441" alt="image" src="https://github.com/user-attachments/assets/53fd059a-302b-4c34-a8a1-3f5cc1b29736" />
+
+
+<img width="671" height="430" alt="image" src="https://github.com/user-attachments/assets/1b71ac3b-56ac-4e0a-806e-8178d720ac63" />
+
+
+
+### New Sample Data Prediction
+
+<img width="384" height="66" alt="image" src="https://github.com/user-attachments/assets/c085ef36-f1d0-4ed7-baa8-a05f09574595" />
 
 
 ## RESULT
